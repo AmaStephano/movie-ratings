@@ -38,6 +38,20 @@ def register_form():
 
     return render_template("/register_form.html")
 
+@app.route('/register', methods=["POST"])
+def register_process():
+
+    email = request.form.get("email")
+    password = request.form.get("password")
+
+    user = User.query.filter(User.email == email).first()
+
+    if user: 
+        print "User exists"
+    else:
+        print "no user"
+
+    return redirect("/")
 
 
 if __name__ == "__main__":
