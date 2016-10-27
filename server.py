@@ -44,14 +44,44 @@ def register_process():
     email = request.form.get("email")
     password = request.form.get("password")
 
-    user = User.query.filter(User.email == email).first()
+    check_user = User.query.filter(User.email == email).first()
 
-    if user: 
-        print "User exists"
+    if check_user: 
+        flash('Please try a different email. This email is already registered.')
+        return redirect("/register")
     else:
-        print "no user"
+        new_user = User(email=email, password=password)
+        db.session.add(new_user)
+        db.session.commit()
+        return redirect("/")
 
-    return redirect("/")
+@app.route('/login', methods=["GET"])
+def login_form():
+
+    return render_template("/login.html")
+
+
+@app.route('/login', methods=["POST"])
+def login_process():
+
+    email = request.form.get("email")
+    password = request.form.get("password")
+
+    check_user = User.query.filter( (User.email == email) & (User.password == password) ).first()
+
+    if check_user: 
+        session['user_id'] = check_user.user_id
+        flash("Logged in")
+        return redirect("/")
+    else:
+        flash("Incorrect email and/or password. Please try again.")
+        return redirect("/login")
+
+@app.route('/logout')
+def log_out():
+
+    session.pop('user_id', None)
+    return render_template("/logout.html")
 
 
 if __name__ == "__main__":
@@ -62,7 +92,7 @@ if __name__ == "__main__":
     connect_to_db(app)
 
     # Use the DebugToolbar
-    DebugToolbarExtension(app)
+    # DebugToolbarExtension(app)
 
 
     
