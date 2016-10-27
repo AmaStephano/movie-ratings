@@ -43,17 +43,19 @@ def register_process():
 
     email = request.form.get("email")
     password = request.form.get("password")
+    age = request.form.get("age")
+    zipcode = request.form.get("zipcode")
 
     check_user = User.query.filter(User.email == email).first()
 
     if check_user: 
-        flash('Please try a different email. This email is already registered.')
-        return redirect("/register")
+        flash('This email already exists. Please log in.')
+        return redirect("/login")
     else:
-        new_user = User(email=email, password=password)
+        new_user = User(email=email, password=password, age=age, zipcode=zipcode)
         db.session.add(new_user)
         db.session.commit()
-        return redirect("/")
+        return redirect("/login")
 
 @app.route('/login', methods=["GET"])
 def login_form():
@@ -72,7 +74,7 @@ def login_process():
     if check_user: 
         session['user_id'] = check_user.user_id
         flash("Logged in")
-        return redirect("/")
+        return render_template("/homepage_loggedin.html")
     else:
         flash("Incorrect email and/or password. Please try again.")
         return redirect("/login")
@@ -83,6 +85,12 @@ def log_out():
     session.pop('user_id', None)
     return render_template("/logout.html")
 
+@app.route('/users/<user_id>')
+def display_user_info(user_id):
+
+    user_info = User.query.filter(User.user_id == user_id).first()
+
+    return render_template("/user_details.html")
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the

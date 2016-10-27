@@ -5,8 +5,12 @@
        
     <form action="/register" method="POST">
         Email: <input type="text" name="email" required><br>
+        Age: <input type="text" name="age"><br>
+        Zip Code: <input type="text" name="zipcode"><br>
         Password: <input type="text" name="password" required><br>
         <input type="submit" value="Register">
     </form>
+
+    <p>Already have an account? <a href="/login">Please log in</a></p>
 
 {% endblock %}
