@@ -92,18 +92,22 @@ def display_user_info(user_id):
     user_info = User.query.filter(User.user_id == user_id).first()
     rating_info = Rating.query.filter(Rating.user_id == user_id).all()
 
-    # print "Rating INFO %s" % (rating_info)
-    # print "\n\n\n"
-    # # print "Movies %s" % (rating_info[0].movie.title)
-
     return render_template("/user_details.html", user_info=user_info, rating_info=rating_info)
 
 @app.route('/all_movies')
 def display_all_movies():
 
-    all_movies = db.session.query(Movie.title).order_by(Movie.title).all()
+    all_movies = Movie.query.order_by(Movie.title).all()
 
     return render_template("/all_movies.html", all_movies=all_movies)
+
+@app.route('/all_movies/<unique_id>')
+def display_user_info(unique_id):
+
+    movie_info = Movie.query.filter_by(Movie.movie_id = unique_id).first()
+
+    return render_template("/movie_details.html", movie_info=movie_info)
+
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the
