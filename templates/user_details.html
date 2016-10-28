@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <h2>{{ user_info.email }} {{ user_info.user_id }}</h2>
+
+    <p><b>Age:</b>
+    
+    {% if user_info.age %}
+        {{ user_info.age }}
+    {% else %}
+        No age found
+    {% endif %}
+    
+    </p>    
+
+
+     <p><b>Zip Code:</b>
+    
+    {% if user_info.zipcode %}
+        {{ user_info.zipcode }}
+    {% else %}
+        No zip code found
+    {% endif %}
+    
+    </p> 
+
+     <p><a href="/all_movies"><b>View All Movies</b></a></p>
+
+    <p><b>List of Movies You Have Rated</b></p>
+    
+        {% if rating_info %}
+            <ul>
+            {% for rating in rating_info %}
+                <li> {{ rating.movie.title }} - {{ rating.score }} </li>
+            {% endfor %}
+             </ul>
+        {% else %}
+            No ratings found
+        {% endif %}
+   
+
+
+  
+{% endblock %}

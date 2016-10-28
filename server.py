@@ -74,7 +74,8 @@ def login_process():
     if check_user: 
         session['user_id'] = check_user.user_id
         flash("Logged in")
-        return render_template("/homepage_loggedin.html")
+        user_page = "/users/" + str(session['user_id'])
+        return redirect(user_page)
     else:
         flash("Incorrect email and/or password. Please try again.")
         return redirect("/login")
@@ -89,8 +90,20 @@ def log_out():
 def display_user_info(user_id):
 
     user_info = User.query.filter(User.user_id == user_id).first()
+    rating_info = Rating.query.filter(Rating.user_id == user_id).all()
 
-    return render_template("/user_details.html")
+    # print "Rating INFO %s" % (rating_info)
+    # print "\n\n\n"
+    # # print "Movies %s" % (rating_info[0].movie.title)
+
+    return render_template("/user_details.html", user_info=user_info, rating_info=rating_info)
+
+@app.route('/all_movies')
+def display_all_movies():
+
+    all_movies = db.session.query(Movie.title).order_by(Movie.title).all()
+
+    return render_template("/all_movies.html", all_movies=all_movies)
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the
